@@ -11,6 +11,7 @@ export function BrandPromiseSection() {
                     src="https://images.unsplash.com/photo-1490474418585-ba9bad8fd0ea?w=1600&auto=format&fit=crop&q=80"
                     alt="Healthy Breakfast Background"
                     fill
+                    unoptimized
                     className="object-cover"
                 />
             </div>

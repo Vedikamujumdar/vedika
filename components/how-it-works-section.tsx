@@ -13,52 +13,55 @@ export function HowItWorksSection() {
                     How The Clean Crate Fits Into Your Day
                 </h2>
 
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
                     {/* Step 1 */}
-                    <div className="group relative overflow-hidden rounded-[2.5rem] bg-white dark:bg-zinc-800 shadow-sm border border-zinc-100 dark:border-zinc-800">
-                        <div className="relative h-64 w-full overflow-hidden">
+                    <div className="group flex flex-col rounded-3xl overflow-hidden bg-white dark:bg-zinc-800 shadow-md hover:shadow-xl transition-all duration-300">
+                        <div className="w-full bg-zinc-50 dark:bg-zinc-700 flex justify-center items-center overflow-hidden">
                             <Image
                                 src="/how-it-works-1.png"
                                 alt="Add Milk or Water"
-                                fill
-                                className="object-cover transition-transform duration-700 group-hover:scale-105"
+                                width={400}
+                                height={300}
+                                className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500"
                             />
                         </div>
-                        <div className="bg-blue-900 dark:bg-blue-950 p-6 text-center h-full">
+                        <div className="flex-1 bg-blue-900 dark:bg-blue-950 p-6 text-center flex flex-col justify-center">
                             <h3 className="font-bold text-xl text-white mb-2">1. Add Milk or Water</h3>
-                            <p className="text-white/80 text-sm font-medium">(Whole rolled oats)</p>
+                            <p className="text-blue-100 text-sm font-medium">(Oats with magic)</p>
                         </div>
                     </div>
 
                     {/* Step 2 */}
-                    <div className="group relative overflow-hidden rounded-[2.5rem] bg-white dark:bg-zinc-800 shadow-sm border border-zinc-100 dark:border-zinc-800">
-                        <div className="relative h-64 w-full overflow-hidden">
+                    <div className="group flex flex-col rounded-3xl overflow-hidden bg-white dark:bg-zinc-800 shadow-md hover:shadow-xl transition-all duration-300">
+                        <div className="w-full bg-zinc-50 dark:bg-zinc-700 flex justify-center items-center overflow-hidden">
                             <Image
                                 src="/how-it-works-2.png"
                                 alt="Rest Overnight"
-                                fill
-                                className="object-cover transition-transform duration-700 group-hover:scale-105"
+                                width={400}
+                                height={300}
+                                className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500"
                             />
                         </div>
-                        <div className="bg-blue-900 dark:bg-blue-950 p-6 text-center h-full">
-                            <h3 className="font-bold text-xl text-white mb-2">2. Rest Overnight</h3>
-                            <p className="text-white/80 text-sm font-medium">(or 10 min hot)</p>
+                        <div className="flex-1 bg-blue-900 dark:bg-blue-950 p-6 text-center flex flex-col justify-center">
+                            <h3 className="font-bold text-xl text-white mb-2">2. Let it rest for a while/Refrigerate it</h3>
+                            <p className="text-blue-100 text-sm font-medium">(or 10 min hot)</p>
                         </div>
                     </div>
 
                     {/* Step 3 */}
-                    <div className="group relative overflow-hidden rounded-[2.5rem] bg-blue-50 dark:bg-zinc-800/50 shadow-sm border border-zinc-100 dark:border-zinc-800 flex flex-col">
-                        <div className="relative h-64 w-full overflow-hidden flex items-center justify-center">
+                    <div className="group flex flex-col rounded-3xl overflow-hidden bg-white dark:bg-zinc-800 shadow-md hover:shadow-xl transition-all duration-300">
+                        <div className="w-full bg-zinc-50 dark:bg-zinc-700 flex justify-center items-center overflow-hidden">
                             <Image
                                 src="/how-it-works-3.png"
                                 alt="No Guilt Placard"
-                                fill
-                                className="object-cover transition-transform duration-700 group-hover:scale-105"
+                                width={400}
+                                height={300}
+                                className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500"
                             />
                         </div>
-                        <div className="bg-blue-900 dark:bg-blue-950 p-6 text-center mt-auto relative z-20">
+                        <div className="flex-1 bg-blue-900 dark:bg-blue-950 p-6 text-center flex flex-col justify-center">
                             <h3 className="font-bold text-xl text-white mb-2">3. Eat. No Guilt</h3>
-                            <p className="text-white/80 text-sm font-medium">(Whey protein)</p>
+                            <p className="text-blue-100 text-sm font-medium">(added Protien)</p>
                         </div>
                     </div>
                 </div>

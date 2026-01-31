@@ -74,10 +74,10 @@ export function InteractiveProductCard() {
                         style={{ backfaceVisibility: 'hidden' }}
                     >
                         <Image
-                            src="/product-packet.png"
+                            src="/pousht-pop-oats.jpg"
                             alt="Product Front"
                             fill
-                            className="object-contain p-8 pointer-events-none drop-shadow-2xl"
+                            className="object-cover pointer-events-none"
                             priority
                         />
                         {/* Gloss/Reflection effect */}
@@ -100,10 +100,10 @@ export function InteractiveProductCard() {
                         }}
                     >
                         <Image
-                            src="/product-back.png"
+                            src="/pousht-pop-oats.jpg"
                             alt="Product Back"
                             fill
-                            className="object-contain p-8 pointer-events-none drop-shadow-2xl"
+                            className="object-cover pointer-events-none"
                             priority
                         />
                         {/* Gloss/Reflection effect */}

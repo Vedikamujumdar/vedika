@@ -3,14 +3,68 @@
 import * as React from "react"
 import Image from "next/image"
 import Link from "next/link"
+import { useCart } from "@/context/cart-context"
 
 import { InteractiveProductCard } from "./interactive-product-card"
 
 interface ProductDetailsSectionProps {
     showViewDetailsLink?: boolean;
+    product?: any;
 }
 
-export function ProductDetailsSection({ showViewDetailsLink = true }: ProductDetailsSectionProps) {
+export function ProductDetailsSection({ showViewDetailsLink = true, product }: ProductDetailsSectionProps) {
+    const { addItem } = useCart()
+    const [isAdding, setIsAdding] = React.useState(false)
+    const [quantity, setQuantity] = React.useState(1)
+
+    // Fallback data if no product provided (for initial render/dev)
+    const title = product?.title || "Ready to eat oats Mocha rush"
+    const description = product?.description || "Start your day with the perfect blend of taste and nutrition."
+    const price = product?.priceRange?.minVariantPrice?.amount || "110.00"
+    const currency = product?.priceRange?.minVariantPrice?.currencyCode || "INR"
+    const variantId = product?.variants?.edges[0]?.node?.id
+    const availableForSale = product?.availableForSale ?? true
+
+    // Format price
+    const formattedPrice = new Intl.NumberFormat('en-IN', {
+        style: 'currency',
+        currency: currency,
+    }).format(Number(price))
+
+    const handleAddToCart = async () => {
+        // Fallback for demo if variantId is missing (Use Real ID)
+        const activeVariantId = variantId || "59037374054481";
+        // Get image URL safely
+        const imageUrl = product?.images?.edges?.[0]?.node?.url || "/pousht-pop-oats.jpg";
+
+        console.log("Add to Cart Clicked!", { activeVariantId, quantity });
+
+        setIsAdding(true)
+        try {
+            await addItem({
+                variantId: activeVariantId,
+                quantity: quantity,
+                title: title,
+                price: price,
+                image: imageUrl,
+                productTitle: title
+            })
+            console.log("Item added to cart via context");
+        } catch (error) {
+            console.error("Error adding to cart:", error)
+        } finally {
+            setIsAdding(false)
+        }
+    }
+
+    const handleBuyNow = async () => {
+        // For now, Buy Now acts like Add to Cart + Redirect (or just Add to Cart and Open)
+        // Ideally we would create a new checkout URL here.
+        // For simplicity in this iteration, we add to cart and open cart.
+        await handleAddToCart();
+        // The cart drawer opening is handled by addItem inside context usually, or we explicitly open it.
+    }
+
     return (
         <div className="grid grid-cols-1 gap-10 lg:gap-16 lg:grid-cols-2 lg:items-center">
             {/* Mobile Heading (Heading -> Photo -> Text) */}
@@ -19,7 +73,7 @@ export function ProductDetailsSection({ showViewDetailsLink = true }: ProductDet
                     Premium Quality
                 </span>
                 <h2 className="font-heading text-4xl font-bold tracking-tight text-zinc-900 dark:text-white sm:text-5xl mb-4">
-                    Mocha Rush | Ready To Eat Oats
+                    {title}
                 </h2>
             </div>
 
@@ -36,13 +90,13 @@ export function ProductDetailsSection({ showViewDetailsLink = true }: ProductDet
                         Premium Quality
                     </span>
                     <h2 className="font-heading text-4xl font-bold tracking-tight text-zinc-900 dark:text-white sm:text-5xl mb-4">
-                        Mocha Rush | Ready To Eat Oats
+                        {title}
                     </h2>
                 </div>
 
                 <div className="flex items-center gap-4 mb-2">
-                    <span className="text-xl text-zinc-400 line-through decoration-red-500/50">₹ 799.00</span>
-                    <span className="text-2xl font-bold text-zinc-900 dark:text-white">₹ 599.00</span>
+                    <span className="text-xl text-zinc-400 line-through decoration-red-500/50">₹ 150.00</span>
+                    <span className="text-2xl font-bold text-zinc-900 dark:text-white">{formattedPrice}</span>
                     <span className="rounded-full bg-zinc-100 px-3 py-1 text-xs font-bold uppercase tracking-wide text-zinc-900 dark:bg-zinc-800 dark:text-white">
                         Sale
                     </span>
@@ -55,13 +109,19 @@ export function ProductDetailsSection({ showViewDetailsLink = true }: ProductDet
                 <div className="mb-6">
                     <label className="block text-sm font-medium text-zinc-900 dark:text-white mb-2">Quantity</label>
                     <div className="flex h-12 w-32 items-center justify-between rounded-lg border border-zinc-200 dark:border-zinc-700">
-                        <button className="flex h-full w-10 items-center justify-center text-zinc-500 hover:text-black dark:text-zinc-400 dark:hover:text-white hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-l-lg transition-colors">
+                        <button
+                            onClick={() => setQuantity(q => Math.max(1, q - 1))}
+                            className="flex h-full w-10 items-center justify-center text-zinc-500 hover:text-black dark:text-zinc-400 dark:hover:text-white hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-l-lg transition-colors"
+                        >
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-4 w-4">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 12h-15" />
                             </svg>
                         </button>
-                        <span className="text-sm font-semibold">1</span>
-                        <button className="flex h-full w-10 items-center justify-center text-zinc-500 hover:text-black dark:text-zinc-400 dark:hover:text-white hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-r-lg transition-colors">
+                        <span className="text-sm font-semibold">{quantity}</span>
+                        <button
+                            onClick={() => setQuantity(q => q + 1)}
+                            className="flex h-full w-10 items-center justify-center text-zinc-500 hover:text-black dark:text-zinc-400 dark:hover:text-white hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-r-lg transition-colors"
+                        >
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-4 w-4">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                             </svg>
@@ -70,10 +130,18 @@ export function ProductDetailsSection({ showViewDetailsLink = true }: ProductDet
                 </div>
 
                 <div className="flex flex-col gap-3">
-                    <button className="flex h-12 w-full items-center justify-center rounded-full border border-zinc-900 text-zinc-900 font-medium transition-colors hover:bg-zinc-50 dark:border-white dark:text-white dark:hover:bg-white/10">
-                        Add to cart
+                    <button
+                        onClick={handleAddToCart}
+                        disabled={!availableForSale || isAdding}
+                        className="flex h-12 w-full items-center justify-center rounded-full border border-zinc-900 text-zinc-900 font-medium transition-colors hover:bg-zinc-50 dark:border-white dark:text-white dark:hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        {isAdding ? "Adding..." : availableForSale ? "Add to cart" : "Out of stock"}
                     </button>
-                    <button className="flex h-12 w-full items-center justify-center rounded-full bg-zinc-900 text-white font-medium shadow-sm transition-transform hover:scale-[1.01] active:scale-[0.99] dark:bg-white dark:text-black hover:bg-zinc-800 dark:hover:bg-zinc-200">
+                    <button
+                        onClick={handleBuyNow}
+                        disabled={!availableForSale || isAdding}
+                        className="flex h-12 w-full items-center justify-center rounded-full bg-zinc-900 text-white font-medium shadow-sm transition-transform hover:scale-[1.01] active:scale-[0.99] dark:bg-white dark:text-black hover:bg-zinc-800 dark:hover:bg-zinc-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
                         Buy it now
                     </button>
                 </div>
@@ -83,8 +151,8 @@ export function ProductDetailsSection({ showViewDetailsLink = true }: ProductDet
                         onClick={() => {
                             if (navigator.share) {
                                 navigator.share({
-                                    title: 'Mocha Rush | The Clean Crate',
-                                    text: 'Check out this protein-packed oats breakfast!',
+                                    title: title,
+                                    text: `Check out ${title}!`,
                                     url: window.location.href,
                                 }).catch(console.error);
                             } else {
@@ -100,7 +168,7 @@ export function ProductDetailsSection({ showViewDetailsLink = true }: ProductDet
                         Share
                     </button>
                     {showViewDetailsLink && (
-                        <Link href="/products/mocha-rush" className="flex items-center gap-2 text-sm font-medium text-zinc-600 hover:text-black dark:text-zinc-400 dark:hover:text-white transition-colors">
+                        <Link href={`/products/${product?.handle || 'mocha-rush'}`} className="flex items-center gap-2 text-sm font-medium text-zinc-600 hover:text-black dark:text-zinc-400 dark:hover:text-white transition-colors">
                             View full details
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-4 w-4">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />

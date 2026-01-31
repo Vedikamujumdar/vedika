@@ -4,8 +4,11 @@ import { CustomerReviewsCarousel } from "@/components/customer-reviews-carousel"
 import { ProductReviewsWidget } from "@/components/product-reviews-widget";
 import { SiteFooter } from "@/components/site-footer";
 import Link from "next/link";
+import { getProduct } from "@/lib/shopify";
 
-export default function MochaRushProductPage() {
+export default async function MochaRushProductPage() {
+    const product = await getProduct("mocha-rush");
+
     return (
         <div className="min-h-screen bg-white text-zinc-900 selection:bg-black selection:text-white dark:bg-black dark:text-white dark:selection:bg-white dark:selection:text-black">
 
@@ -17,11 +20,11 @@ export default function MochaRushProductPage() {
                         <span className="mx-2">/</span>
                         <Link href="/#products" className="hover:text-black dark:hover:text-white transition-colors">Products</Link>
                         <span className="mx-2">/</span>
-                        <span className="text-zinc-900 dark:text-white">Mocha Rush</span>
+                        <span className="text-zinc-900 dark:text-white">{product?.title || "Mocha Rush"}</span>
                     </nav>
 
                     {/* Product Main Section (Image + Buy Box) */}
-                    <ProductDetailsSection showViewDetailsLink={false} />
+                    <ProductDetailsSection showViewDetailsLink={false} product={product} />
 
                     {/* Detailed Info Section (Wholesome Goodness etc.) */}
                     <EverythingYouNeedToKnow />

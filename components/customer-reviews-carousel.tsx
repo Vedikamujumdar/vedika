@@ -3,6 +3,10 @@
 import * as React from "react"
 import { motion } from "framer-motion"
 
+const isInstagramUrl = (url?: string) => {
+    return typeof url === "string" && url.includes("cdninstagram.com");
+};
+
 const reviews = [
     {
         id: 1,

@@ -8,8 +8,8 @@ import * as THREE from "three"
 function PouchModel() {
     // Load textures
     const props = useTexture({
-        mapFront: '/product-packet.png',
-        mapBack: '/product-back.png',
+        mapFront: '/pousht-pop-oats.jpg',
+        mapBack: '/pousht-pop-oats.jpg',
     })
 
     return (
@@ -26,9 +26,9 @@ function PouchModel() {
                 <meshStandardMaterial map={props.mapBack} transparent roughness={0.4} />
             </mesh>
 
-            {/* Inner Body (Gives volume and blue sides) */}
+            {/* Inner Body (Gives volume - Neutral Grey) */}
             <RoundedBox args={[2.95, 3.95, 0.2]} radius={0.1} smoothness={4}>
-                <meshStandardMaterial color="#1e40af" roughness={0.5} />
+                <meshStandardMaterial color="#e4e4e7" roughness={0.5} />
             </RoundedBox>
         </group>
     )

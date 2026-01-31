@@ -7,6 +7,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { ModeToggle } from "@/components/mode-toggle"
 import { ArrowUp, Menu, X } from "lucide-react"
+import { useCart } from "@/context/cart-context"
 
 const NAV_LINKS = [
     { name: "Home", href: "/#home" },
@@ -24,6 +25,7 @@ export function SiteHeader() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
     const [mounted, setMounted] = useState(false)
     const pathname = usePathname()
+    const { cartCount, openCart } = useCart()
 
     useEffect(() => {
         setMounted(true)
@@ -122,9 +124,19 @@ export function SiteHeader() {
 
                     <div className="flex items-center gap-4">
                         <ModeToggle />
-                        <button className="hidden sm:block text-sm font-medium hover:text-blue-600 dark:text-white transition-colors">Login</button>
-                        <button className="rounded-full bg-black px-4 py-2 text-sm font-medium text-white transition-all hover:bg-zinc-800 hover:scale-105 dark:bg-white dark:text-black dark:hover:bg-zinc-200">
-                            Cart (10)
+                        <a
+                            href="https://cleancrate-8642.myshopify.com/account/login"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="hidden sm:block text-sm font-medium hover:text-blue-600 dark:text-white transition-colors"
+                        >
+                            Login
+                        </a>
+                        <button
+                            onClick={openCart}
+                            className="rounded-full bg-black px-4 py-2 text-sm font-medium text-white transition-all hover:bg-zinc-800 hover:scale-105 dark:bg-white dark:text-black dark:hover:bg-zinc-200 relative"
+                        >
+                            Cart ({cartCount})
                         </button>
 
                         {/* Hamburger Button */}
@@ -155,9 +167,12 @@ export function SiteHeader() {
                             </a>
                         ))}
                         <div className="border-t border-zinc-100 dark:border-zinc-800 my-2 pt-2">
-                            <button className="w-full text-left font-semibold text-base py-3 px-4 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-900 rounded-xl">
+                            <a
+                                href="https://cleancrate-8642.myshopify.com/account/login"
+                                className="block w-full text-left font-semibold text-base py-3 px-4 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-900 rounded-xl"
+                            >
                                 Login
-                            </button>
+                            </a>
                         </div>
                     </div>
                 )}
