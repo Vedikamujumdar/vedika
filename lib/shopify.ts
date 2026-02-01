@@ -239,27 +239,21 @@ const defaultTestimonials: Testimonial[] = [
   }
 ];
 
+const storefrontToken = process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_TOKEN || "5f25b0b15df7b2881900ac57a4ee118d";
+
 /**
- * Fetches testimonials from Shopify Metaobjects.
+ * Fetches testimonials from Shopify Metaobjects via Storefront API.
  * Falls back to default testimonials if API fails or no data exists.
- * 
- * To set up in Shopify Admin:
- * 1. Go to Settings > Custom data > Metaobject definitions
- * 2. Create a definition called "testimonial" with fields:
- *    - author (single line text)
- *    - role (single line text)  
- *    - rating (integer, 1-5)
- *    - text (multi-line text)
- *    - date (single line text, e.g. "2 days ago")
- * 3. Create entries under Content > Metaobjects > testimonial
  */
 export async function getTestimonials(): Promise<Testimonial[]> {
+  const URL = `https://${domain}/api/2024-01/graphql.json`;
+
   const query = `
   {
     metaobjects(type: "testimonial", first: 20) {
       edges {
         node {
-          id
+          handle
           fields {
             key
             value
@@ -270,11 +264,20 @@ export async function getTestimonials(): Promise<Testimonial[]> {
   }`;
 
   try {
-    const response = await ShopifyData(query);
-    const metaobjects = response.data?.metaobjects?.edges;
+    const response = await fetch(URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Shopify-Storefront-Access-Token": storefrontToken,
+      },
+      body: JSON.stringify({ query }),
+    });
+
+    const result = await response.json();
+    const metaobjects = result.data?.metaobjects?.edges;
 
     if (!metaobjects || metaobjects.length === 0) {
-      console.log("No testimonial metaobjects found, using defaults");
+      console.log("No testimonial metaobjects found via Storefront API, using defaults");
       return defaultTestimonials;
     }
 
@@ -285,7 +288,7 @@ export async function getTestimonials(): Promise<Testimonial[]> {
       }, {});
 
       return {
-        id: edge.node.id || index + 1,
+        id: edge.node.handle || index + 1,
         author: fields.author || "Anonymous",
         role: fields.role || "Customer",
         rating: parseInt(fields.rating) || 5,
@@ -296,7 +299,7 @@ export async function getTestimonials(): Promise<Testimonial[]> {
 
     return testimonials.length > 0 ? testimonials : defaultTestimonials;
   } catch (error) {
-    console.log("Error fetching testimonials, using defaults:", error);
+    console.log("Error fetching testimonials via Storefront API, using defaults:", error);
     return defaultTestimonials;
   }
 }
