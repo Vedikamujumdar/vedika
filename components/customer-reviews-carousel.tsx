@@ -1,13 +1,14 @@
 "use client"
 
 import * as React from "react"
-import { motion } from "framer-motion"
+import type { Testimonial } from "@/lib/shopify"
 
 const isInstagramUrl = (url?: string) => {
     return typeof url === "string" && url.includes("cdninstagram.com");
 };
 
-const reviews = [
+// Default reviews as fallback
+const defaultReviews: Testimonial[] = [
     {
         id: 1,
         author: "Sarah J.",
@@ -50,7 +51,14 @@ const reviews = [
     }
 ]
 
-export function CustomerReviewsCarousel() {
+interface CustomerReviewsCarouselProps {
+    testimonials?: Testimonial[];
+}
+
+export function CustomerReviewsCarousel({ testimonials }: CustomerReviewsCarouselProps) {
+    // Use provided testimonials or fall back to defaults
+    const reviews = testimonials && testimonials.length > 0 ? testimonials : defaultReviews;
+
     // Duplicate reviews to create infinite scroll effect
     const duplicatedReviews = [...reviews, ...reviews]
 

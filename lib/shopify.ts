@@ -183,6 +183,125 @@ export async function getProducts() {
 }
 
 // ============================================
+// TESTIMONIALS (via Metaobjects)
+// ============================================
+
+export interface Testimonial {
+  id: string | number;
+  author: string;
+  role: string;
+  rating: number;
+  text: string;
+  date: string;
+}
+
+// Default testimonials as fallback
+const defaultTestimonials: Testimonial[] = [
+  {
+    id: 1,
+    author: "Sarah J.",
+    role: "Verified Buyer",
+    rating: 5,
+    text: "Absolutely love the Mocha vibe! It's my go-to breakfast now. The coffee kick is real and it keeps me full for hours.",
+    date: "2 days ago"
+  },
+  {
+    id: 2,
+    author: "Mike T.",
+    role: "Fitness Enthusiast",
+    rating: 5,
+    text: "Best protein oats I've tried. Not too sweet, just perfect. The convenience of it being ready-to-eat is a game changer for my morning gym rush.",
+    date: "1 week ago"
+  },
+  {
+    id: 3,
+    author: "Priya K.",
+    role: "Verified Buyer",
+    rating: 4,
+    text: "Very tasty! I add a bit of almond milk and it's perfect. Love that it has no added sugar.",
+    date: "2 weeks ago"
+  },
+  {
+    id: 4,
+    author: "David L.",
+    role: "Verified Buyer",
+    rating: 5,
+    text: "I was skeptical about cold oats, but these are delicious. The mocha flavor is spot on.",
+    date: "3 weeks ago"
+  },
+  {
+    id: 5,
+    author: "Emily R.",
+    role: "Yoga Instructor",
+    rating: 5,
+    text: "Clean ingredients and great taste. Finally a healthy breakfast that doesn't taste like cardboard!",
+    date: "1 month ago"
+  }
+];
+
+/**
+ * Fetches testimonials from Shopify Metaobjects.
+ * Falls back to default testimonials if API fails or no data exists.
+ * 
+ * To set up in Shopify Admin:
+ * 1. Go to Settings > Custom data > Metaobject definitions
+ * 2. Create a definition called "testimonial" with fields:
+ *    - author (single line text)
+ *    - role (single line text)  
+ *    - rating (integer, 1-5)
+ *    - text (multi-line text)
+ *    - date (single line text, e.g. "2 days ago")
+ * 3. Create entries under Content > Metaobjects > testimonial
+ */
+export async function getTestimonials(): Promise<Testimonial[]> {
+  const query = `
+  {
+    metaobjects(type: "testimonial", first: 20) {
+      edges {
+        node {
+          id
+          fields {
+            key
+            value
+          }
+        }
+      }
+    }
+  }`;
+
+  try {
+    const response = await ShopifyData(query);
+    const metaobjects = response.data?.metaobjects?.edges;
+
+    if (!metaobjects || metaobjects.length === 0) {
+      console.log("No testimonial metaobjects found, using defaults");
+      return defaultTestimonials;
+    }
+
+    const testimonials: Testimonial[] = metaobjects.map((edge: any, index: number) => {
+      const fields = edge.node.fields.reduce((acc: any, field: any) => {
+        acc[field.key] = field.value;
+        return acc;
+      }, {});
+
+      return {
+        id: edge.node.id || index + 1,
+        author: fields.author || "Anonymous",
+        role: fields.role || "Customer",
+        rating: parseInt(fields.rating) || 5,
+        text: fields.text || "",
+        date: fields.date || "Recently"
+      };
+    });
+
+    return testimonials.length > 0 ? testimonials : defaultTestimonials;
+  } catch (error) {
+    console.log("Error fetching testimonials, using defaults:", error);
+    return defaultTestimonials;
+  }
+}
+
+// ============================================
 // CHECKOUT HELPER (Client-Side Permalinks)
 // ============================================
 
