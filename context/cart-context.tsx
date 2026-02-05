@@ -15,13 +15,14 @@ export type CartItem = {
 type CartContextType = {
     items: CartItem[]
     isOpen: boolean
-    checkoutUrl: string
     cartCount: number
+    isCheckingOut: boolean
     openCart: () => void
     closeCart: () => void
     addItem: (item: CartItem) => void
     removeItem: (variantId: string) => void
     updateQuantity: (variantId: string, delta: number) => void
+    handleCheckout: () => Promise<void>
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined)
@@ -30,6 +31,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     const [items, setItems] = useState<CartItem[]>([])
     const [isOpen, setIsOpen] = useState(false)
     const [mounted, setMounted] = useState(false)
+    const [isCheckingOut, setIsCheckingOut] = useState(false)
 
     // Load from Local Storage on mount
     useEffect(() => {
@@ -84,14 +86,40 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         )
     }
 
+    const handleCheckout = async () => {
+        if (items.length === 0 || isCheckingOut) return;
+
+        setIsCheckingOut(true);
+        try {
+            const response = await fetch("/api/checkout", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    items: items.map(i => ({
+                        variantId: i.variantId,
+                        quantity: i.quantity
+                    }))
+                }),
+            });
+
+            const data = await response.json();
+            if (data.checkoutUrl) {
+                window.location.href = data.checkoutUrl;
+            } else {
+                throw new Error(data.error || "Failed to get checkout URL");
+            }
+        } catch (error) {
+            console.error("Checkout error:", error);
+            alert("Ready to Checkout? We were unable to redirect you directly to the secure checkout page. Please try again or contact support if the issue persists.");
+        } finally {
+            setIsCheckingOut(false);
+        }
+    };
+
     // Computed Properties
     const cartCount = items.reduce((acc, item) => acc + item.quantity, 0)
-
-    // Generate Permalink using the helper
-    const checkoutUrl = createCheckoutUrl(items.map(i => ({
-        variantId: i.variantId,
-        quantity: i.quantity
-    })))
 
     return (
         <CartContext.Provider value={{
@@ -103,7 +131,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
             removeItem,
             updateQuantity,
             cartCount,
-            checkoutUrl
+            handleCheckout,
+            isCheckingOut
         }}>
             {children}
         </CartContext.Provider>

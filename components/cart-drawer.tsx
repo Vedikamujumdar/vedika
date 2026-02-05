@@ -6,7 +6,7 @@ import { X, Minus, Plus, ShoppingBag, Trash2 } from "lucide-react"
 import Image from "next/image"
 
 export function CartDrawer() {
-    const { items, isOpen, closeCart, removeItem, updateQuantity, checkoutUrl } = useCart()
+    const { items, isOpen, closeCart, removeItem, updateQuantity, handleCheckout, isCheckingOut } = useCart()
 
     // Calculate Subtotal
     const subtotal = items.reduce((acc, item) => {
@@ -143,12 +143,20 @@ export function CartDrawer() {
                                 <span className="text-zinc-500 text-xs">(Calculated at checkout)</span>
                             </div>
                         </div>
-                        <a
-                            href={checkoutUrl}
-                            className="flex h-12 w-full items-center justify-center rounded-full bg-zinc-900 text-white font-medium shadow-sm hover:bg-zinc-800 active:scale-[0.99] dark:bg-white dark:text-black dark:hover:bg-zinc-200 transition-all"
+                        <button
+                            onClick={handleCheckout}
+                            disabled={isCheckingOut}
+                            className="flex h-12 w-full items-center justify-center rounded-full bg-zinc-900 text-white font-medium shadow-sm hover:bg-zinc-800 active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed dark:bg-white dark:text-black dark:hover:bg-zinc-200 transition-all"
                         >
-                            Checkout
-                        </a>
+                            {isCheckingOut ? (
+                                <div className="flex items-center gap-2">
+                                    <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                                    Redirecting to Secure Checkout...
+                                </div>
+                            ) : (
+                                "Checkout"
+                            )}
+                        </button>
                     </div>
                 )}
             </div>

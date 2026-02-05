@@ -15,12 +15,13 @@ import { getLatestReels } from "@/lib/instagram";
 import { BenefitsSection } from "@/components/benefits-section";
 import { FeatureMarquee } from "@/components/feature-marquee";
 import { FAQSection } from "@/components/faq-section";
-import { getProduct } from "@/lib/shopify";
+import { getProduct, getTestimonials } from "@/lib/shopify";
 
 // Rebuild force
 export default async function Home() {
   const reels = await getLatestReels();
   const product = await getProduct("mocha-rush");
+  const testimonials = await getTestimonials();
 
   return (
     <div className="min-h-screen bg-white text-zinc-900 selection:bg-black selection:text-white dark:bg-black dark:text-white dark:selection:bg-white dark:selection:text-black">
@@ -126,7 +127,7 @@ export default async function Home() {
 
         {/* Testimonials Section */}
         <section id="reviews" className="bg-zinc-50 dark:bg-zinc-900 border-y border-zinc-200 dark:border-zinc-800 scroll-mt-24">
-          <CustomerReviewsCarousel />
+          <CustomerReviewsCarousel testimonials={testimonials} />
         </section>
 
         {/* Latest Blogs Section */}

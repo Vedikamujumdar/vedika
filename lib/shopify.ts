@@ -183,6 +183,128 @@ export async function getProducts() {
 }
 
 // ============================================
+// TESTIMONIALS (via Metaobjects)
+// ============================================
+
+export interface Testimonial {
+  id: string | number;
+  author: string;
+  role: string;
+  rating: number;
+  text: string;
+  date: string;
+}
+
+// Default testimonials as fallback
+const defaultTestimonials: Testimonial[] = [
+  {
+    id: 1,
+    author: "Sarah J.",
+    role: "Verified Buyer",
+    rating: 5,
+    text: "Absolutely love the Mocha vibe! It's my go-to breakfast now. The coffee kick is real and it keeps me full for hours.",
+    date: "2 days ago"
+  },
+  {
+    id: 2,
+    author: "Mike T.",
+    role: "Fitness Enthusiast",
+    rating: 5,
+    text: "Best protein oats I've tried. Not too sweet, just perfect. The convenience of it being ready-to-eat is a game changer for my morning gym rush.",
+    date: "1 week ago"
+  },
+  {
+    id: 3,
+    author: "Priya K.",
+    role: "Verified Buyer",
+    rating: 4,
+    text: "Very tasty! I add a bit of almond milk and it's perfect. Love that it has no added sugar.",
+    date: "2 weeks ago"
+  },
+  {
+    id: 4,
+    author: "David L.",
+    role: "Verified Buyer",
+    rating: 5,
+    text: "I was skeptical about cold oats, but these are delicious. The mocha flavor is spot on.",
+    date: "3 weeks ago"
+  },
+  {
+    id: 5,
+    author: "Emily R.",
+    role: "Yoga Instructor",
+    rating: 5,
+    text: "Clean ingredients and great taste. Finally a healthy breakfast that doesn't taste like cardboard!",
+    date: "1 month ago"
+  }
+];
+
+const storefrontToken = process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_TOKEN || "5f25b0b15df7b2881900ac57a4ee118d";
+
+/**
+ * Fetches testimonials from Shopify Metaobjects via Storefront API.
+ * Falls back to default testimonials if API fails or no data exists.
+ */
+export async function getTestimonials(): Promise<Testimonial[]> {
+  const URL = `https://${domain}/api/2024-01/graphql.json`;
+
+  const query = `
+  {
+    metaobjects(type: "testimonial", first: 20) {
+      edges {
+        node {
+          handle
+          fields {
+            key
+            value
+          }
+        }
+      }
+    }
+  }`;
+
+  try {
+    const response = await fetch(URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Shopify-Storefront-Access-Token": storefrontToken,
+      },
+      body: JSON.stringify({ query }),
+    });
+
+    const result = await response.json();
+    const metaobjects = result.data?.metaobjects?.edges;
+
+    if (!metaobjects || metaobjects.length === 0) {
+      console.log("No testimonial metaobjects found via Storefront API, using defaults");
+      return defaultTestimonials;
+    }
+
+    const testimonials: Testimonial[] = metaobjects.map((edge: any, index: number) => {
+      const fields = edge.node.fields.reduce((acc: any, field: any) => {
+        acc[field.key] = field.value;
+        return acc;
+      }, {});
+
+      return {
+        id: edge.node.handle || index + 1,
+        author: fields.author || "Anonymous",
+        role: fields.role || "Customer",
+        rating: parseInt(fields.rating) || 5,
+        text: fields.text || "",
+        date: fields.date || "Recently"
+      };
+    });
+
+    return testimonials.length > 0 ? testimonials : defaultTestimonials;
+  } catch (error) {
+    console.log("Error fetching testimonials via Storefront API, using defaults:", error);
+    return defaultTestimonials;
+  }
+}
+
+// ============================================
 // CHECKOUT HELPER (Client-Side Permalinks)
 // ============================================
 
