@@ -1,5 +1,5 @@
-const domain = process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN || "cleancrate-8642.myshopify.com";
-const storefrontToken = process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_TOKEN || "";
+const domain = "ufybyf-s9.myshopify.com";
+const storefrontToken = "073200920991e76a0eefaff1261be35b";
 
 async function ShopifyData(query: string) {
   const URL = `https://${domain}/api/2024-01/graphql.json`;
