@@ -96,11 +96,11 @@ export function SiteHeader() {
 
     return (
         <>
-            <nav className="fixed top-0 z-50 w-full border-b border-zinc-100 bg-white/80 backdrop-blur-xl dark:border-zinc-800 dark:bg-black/80 transition-all duration-300">
+            <nav className="fixed top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur-xl transition-all duration-300">
                 <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6 lg:px-8">
                     <Link href="/" onClick={scrollToTop} className="flex items-center gap-2 group">
-                        <span className="font-heading text-xl font-bold tracking-tight text-black dark:text-white group-hover:text-blue-600 transition-colors">CLEAN CRATE</span>
-                        <div className="h-2 w-2 rounded-full bg-blue-600 group-hover:scale-125 transition-transform"></div>
+                        <span className="font-heading text-xl font-bold tracking-tight text-foreground transition-colors">CLEAN CRATE</span>
+                        <div className="h-2 w-2 rounded-full bg-accent group-hover:scale-125 transition-transform"></div>
                     </Link>
 
                     <div className="hidden gap-8 lg:flex">
@@ -110,13 +110,13 @@ export function SiteHeader() {
                                 href={link.href}
                                 onClick={(e) => scrollToSection(e, link.href)}
                                 className={`text-sm font-medium transition-all duration-200 ${activeSection === link.href.split("#")[1]
-                                    ? "text-blue-600 dark:text-blue-400 font-bold"
-                                    : "text-zinc-500 hover:text-black dark:text-zinc-400 dark:hover:text-white"
+                                    ? "text-foreground font-bold"
+                                    : "text-text-muted hover:text-foreground"
                                     }`}
                             >
                                 {link.name}
                                 {activeSection === link.href.split("#")[1] && (
-                                    <span className="block h-0.5 w-full bg-blue-600 dark:bg-blue-400 rounded-full mt-0.5 animate-in fade-in zoom-in duration-300" />
+                                    <span className="block h-0.5 w-full bg-accent rounded-full mt-0.5 animate-in fade-in zoom-in duration-300" />
                                 )}
                             </a>
                         ))}
@@ -133,8 +133,7 @@ export function SiteHeader() {
                             Login
                         </a>
                         <button
-                            onClick={openCart}
-                            className="rounded-full bg-black px-4 py-2 text-sm font-medium text-white transition-all hover:bg-zinc-800 hover:scale-105 dark:bg-white dark:text-black dark:hover:bg-zinc-200 relative"
+                            className="btn-primary relative text-sm"
                         >
                             Cart ({cartCount})
                         </button>

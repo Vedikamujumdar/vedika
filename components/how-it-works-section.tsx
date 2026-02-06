@@ -16,16 +16,16 @@ export function HowItWorksSection() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
                     {/* Step 1 */}
                     <div className="group flex flex-col rounded-3xl overflow-hidden bg-white dark:bg-zinc-800 shadow-md hover:shadow-xl transition-all duration-300">
-                        <div className="w-full bg-zinc-50 dark:bg-zinc-700 flex justify-center items-center overflow-hidden">
+                        <div className="w-full bg-zinc-50 dark:bg-zinc-700 flex justify-center items-center overflow-hidden p-8">
                             <Image
                                 src="/how-it-works-1.png"
                                 alt="Add Milk or Water"
                                 width={400}
                                 height={300}
-                                className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500"
+                                className="w-auto h-40 object-contain group-hover:scale-105 transition-transform duration-500"
                             />
                         </div>
-                        <div className="flex-1 bg-blue-900 dark:bg-blue-950 p-6 text-center flex flex-col justify-center">
+                        <div className="flex-1 bg-blue-900 dark:bg-blue-950 p-8 text-center flex flex-col justify-center">
                             <h3 className="font-bold text-xl text-white mb-2">1. Add Milk or Water</h3>
                             <p className="text-blue-100 text-sm font-medium">(Oats with magic)</p>
                         </div>
@@ -33,16 +33,16 @@ export function HowItWorksSection() {
 
                     {/* Step 2 */}
                     <div className="group flex flex-col rounded-3xl overflow-hidden bg-white dark:bg-zinc-800 shadow-md hover:shadow-xl transition-all duration-300">
-                        <div className="w-full bg-zinc-50 dark:bg-zinc-700 flex justify-center items-center overflow-hidden">
+                        <div className="w-full bg-zinc-50 dark:bg-zinc-700 flex justify-center items-center overflow-hidden p-8">
                             <Image
                                 src="/how-it-works-2.png"
                                 alt="Rest Overnight"
                                 width={400}
                                 height={300}
-                                className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500"
+                                className="w-auto h-40 object-contain group-hover:scale-105 transition-transform duration-500"
                             />
                         </div>
-                        <div className="flex-1 bg-blue-900 dark:bg-blue-950 p-6 text-center flex flex-col justify-center">
+                        <div className="flex-1 bg-blue-900 dark:bg-blue-950 p-8 text-center flex flex-col justify-center">
                             <h3 className="font-bold text-xl text-white mb-2">2. Let it rest for a while/Refrigerate it</h3>
                             <p className="text-blue-100 text-sm font-medium">(or 10 min hot)</p>
                         </div>
@@ -50,16 +50,16 @@ export function HowItWorksSection() {
 
                     {/* Step 3 */}
                     <div className="group flex flex-col rounded-3xl overflow-hidden bg-white dark:bg-zinc-800 shadow-md hover:shadow-xl transition-all duration-300">
-                        <div className="w-full bg-zinc-50 dark:bg-zinc-700 flex justify-center items-center overflow-hidden">
+                        <div className="w-full bg-zinc-50 dark:bg-zinc-700 flex justify-center items-center overflow-hidden p-8">
                             <Image
                                 src="/how-it-works-3.png"
                                 alt="No Guilt Placard"
                                 width={400}
                                 height={300}
-                                className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500"
+                                className="w-auto h-40 object-contain group-hover:scale-105 transition-transform duration-500"
                             />
                         </div>
-                        <div className="flex-1 bg-blue-900 dark:bg-blue-950 p-6 text-center flex flex-col justify-center">
+                        <div className="flex-1 bg-blue-900 dark:bg-blue-950 p-8 text-center flex flex-col justify-center">
                             <h3 className="font-bold text-xl text-white mb-2">3. Eat. No Guilt</h3>
                             <p className="text-blue-100 text-sm font-medium">(added Protien)</p>
                         </div>

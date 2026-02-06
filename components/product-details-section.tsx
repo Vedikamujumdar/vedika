@@ -31,11 +31,13 @@ export function ProductDetailsSection({ showViewDetailsLink = true, product }: P
         currency: currency,
     }).format(Number(price))
 
+    // Get image URL safely
+    const imageUrl = product?.images?.edges?.[0]?.node?.url || "/pousht-pop-oats.jpg";
+    const imageAlt = product?.images?.edges?.[0]?.node?.altText || title;
+
     const handleAddToCart = async () => {
         // Fallback for demo if variantId is missing (Use Real ID)
         const activeVariantId = variantId || "44416942178349";
-        // Get image URL safely
-        const imageUrl = product?.images?.edges?.[0]?.node?.url || "/pousht-pop-oats.jpg";
 
         console.log("Add to Cart Clicked!", { activeVariantId, quantity });
 
@@ -79,7 +81,7 @@ export function ProductDetailsSection({ showViewDetailsLink = true, product }: P
 
             {/* Product Image Column - 3D Interactive */}
             <div className="w-full max-w-md mx-auto lg:max-w-none">
-                <InteractiveProductCard />
+                <InteractiveProductCard imageSrc={imageUrl} imageAlt={imageAlt} />
             </div>
 
             {/* Product Info Column */}

@@ -5,7 +5,15 @@ import { motion, useMotionValue, useTransform, useSpring, PanInfo } from "framer
 import Image from "next/image"
 import { Product3DModal } from "@/components/product-3d-modal"
 
-export function InteractiveProductCard() {
+export interface InteractiveProductCardProps {
+    imageSrc?: string;
+    imageAlt?: string;
+}
+
+export function InteractiveProductCard({
+    imageSrc = "/pousht-pop-oats.jpg",
+    imageAlt = "Product Image"
+}: InteractiveProductCardProps) {
     // Rotation state
     const x = useMotionValue(0)
     const y = useMotionValue(0)
@@ -74,8 +82,8 @@ export function InteractiveProductCard() {
                         style={{ backfaceVisibility: 'hidden' }}
                     >
                         <Image
-                            src="/pousht-pop-oats.jpg"
-                            alt="Product Front"
+                            src={imageSrc}
+                            alt={imageAlt}
                             fill
                             className="object-cover pointer-events-none"
                             priority
@@ -100,8 +108,8 @@ export function InteractiveProductCard() {
                         }}
                     >
                         <Image
-                            src="/pousht-pop-oats.jpg"
-                            alt="Product Back"
+                            src={imageSrc}
+                            alt={`${imageAlt} Back`}
                             fill
                             className="object-cover pointer-events-none"
                             priority

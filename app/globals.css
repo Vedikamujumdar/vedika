@@ -1,51 +1,77 @@
 @import "tailwindcss";
 @variant dark (&:where(.dark, .dark *));
 
-
 :root {
-  /* Modern Minimalist Theme */
-  --background: #ffffff;
-  --foreground: #09090b;
-  /* Zinc 950 */
+  /* Premium Quiet Luxury Theme */
 
-  /* Sophisticated Accents */
-  --primary: #18181b;
-  /* Zinc 900 */
-  --secondary: #52525b;
-  /* Zinc 600 */
-  --accent: #f43f5e;
-  /* Modern Rose/Red for CTA pop */
+  /* Backgrounds */
+  --background: #FDFCF8;
+  /* Warm off-white */
+  --bg-secondary: #F5F4F0;
+  /* Slightly darker warm gray/beige */
 
+  /* Foreground / Text */
+  --foreground: #1A1A1A;
+  /* Soft off-black, less harsh than pure black */
+  --text-muted: #66605B;
+  /* Warm gray for secondary text */
+
+  /* Accents */
+  --primary: #1A1A1A;
+  /* Primary actions mimic foreground */
+  --secondary: #E5E0D8;
+  /* Beige accent for subtle backgrounds/borders */
+  --accent: #4A4A45;
+  /* Deep Olive/Charcoal for hover states or emphasis */
+
+  /* UI Elements */
+  --border: #E5E0D8;
+  --radius: 0.25rem;
+  /* Sharper, more editorial corners */
+
+  /* Typography Defaults */
   --font-inter: "Inter", sans-serif;
   --font-outfit: "Outfit", sans-serif;
-
-  --radius: 0.5rem;
 }
 
 .dark {
-  --background: #09090b;
-  /* Zinc 950 */
-  --foreground: #ffffff;
+  /* Dark Mode Adaptation - "Midnight Luxury" */
+  --background: #0D0D0D;
+  --bg-secondary: #1A1A1A;
 
-  --primary: #ffffff;
-  /* White primary in dark mode */
-  --secondary: #a1a1aa;
-  /* Zinc 400 */
-  --accent: #fb7185;
-  /* Lighte Rose */
+  --foreground: #F2F0E9;
+  /* Warm white text */
+  --text-muted: #A1A1AA;
+
+  --primary: #F2F0E9;
+  --secondary: #27272A;
+  --accent: #E5E0D8;
+  /* Light beige pop in dark mode */
+
+  --border: #27272A;
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-bg-secondary: var(--bg-secondary);
+
   --color-foreground: var(--foreground);
+  --color-text-muted: var(--text-muted);
+
   --color-primary: var(--primary);
   --color-secondary: var(--secondary);
   --color-accent: var(--accent);
+
+  --color-border: var(--border);
 
   --font-sans: var(--font-inter);
   --font-heading: var(--font-outfit);
 
   --border-radius-lg: var(--radius);
+  --border-radius-md: calc(var(--radius) - 2px);
+  --border-radius-sm: calc(var(--radius) - 4px);
+
+  /* Custom Spacing if needed, otherwise default Tailwind */
 }
 
 body {
@@ -53,6 +79,8 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
+  line-height: 1.6;
+  /* More airy reading experience */
 }
 
 h1,
@@ -62,17 +90,32 @@ h4,
 h5,
 h6 {
   font-family: var(--font-heading);
-  letter-spacing: -0.025em;
-  /* Tight tracking for modern look */
+  letter-spacing: -0.02em;
+  /* Tight editorial tracking */
+  font-weight: 600;
 }
 
+/* Base Button Styles */
 .btn-primary {
   background-color: var(--primary);
-  color: white;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  color: var(--background);
+  /* Invert for contrast */
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  padding: 0.75rem 2rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  border-radius: 9999px;
+  /* Pill shape checks out for modern luxury or keep consistent with radius */
 }
 
 .btn-primary:hover {
   background-color: var(--accent);
-  transform: translateY(-2px);
+  transform: translateY(-1px);
+}
+
+/* Utilities */
+.container-wide {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
 }

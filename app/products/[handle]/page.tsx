@@ -1,3 +1,4 @@
+
 import { ProductDetailsSection } from "@/components/product-details-section";
 import { EverythingYouNeedToKnow } from "@/components/everything-you-need-to-know";
 import { CustomerReviewsCarousel } from "@/components/customer-reviews-carousel";
@@ -5,9 +6,15 @@ import { ProductReviewsWidget } from "@/components/product-reviews-widget";
 import { SiteFooter } from "@/components/site-footer";
 import Link from "next/link";
 import { getProduct } from "@/lib/shopify";
+import { notFound } from "next/navigation";
 
-export default async function MochaRushProductPage() {
-    const product = await getProduct("mocha-rush-ready-to-eat-oats");
+export default async function ProductPage({ params }: { params: Promise<{ handle: string }> }) {
+    const { handle } = await params;
+    const product = await getProduct(handle);
+
+    if (!product) {
+        notFound();
+    }
 
     return (
         <div className="min-h-screen bg-white text-zinc-900 selection:bg-black selection:text-white dark:bg-black dark:text-white dark:selection:bg-white dark:selection:text-black">
@@ -20,7 +27,7 @@ export default async function MochaRushProductPage() {
                         <span className="mx-2">/</span>
                         <Link href="/#products" className="hover:text-black dark:hover:text-white transition-colors">Products</Link>
                         <span className="mx-2">/</span>
-                        <span className="text-zinc-900 dark:text-white">{product?.title || "Mocha Rush"}</span>
+                        <span className="text-zinc-900 dark:text-white">{product.title}</span>
                     </nav>
 
                     {/* Product Main Section (Image + Buy Box) */}
