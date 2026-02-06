@@ -18,7 +18,7 @@ import { getTestimonials } from "@/lib/shopify";
 import { HomeHeroCarousel } from "@/components/home-hero-carousel";
 import { CuratedProductsGrid } from "@/components/curated-products-grid";
 
-// Rebuild force
+// Rebuild force v2
 
 export default async function Home() {
   const reels = await getLatestReels();
