@@ -7,6 +7,8 @@ import { usePathname } from "next/navigation"
 import { ModeToggle } from "@/components/mode-toggle"
 import { ArrowUp, Menu, X } from "lucide-react"
 import { useCart } from "@/context/cart-context"
+import { useAuth } from "@/context/auth-context"
+import { AuthModal } from "./auth-modal"
 
 const NAV_LINKS = [
     { name: "Home", href: "/#home" },
@@ -22,9 +24,11 @@ export function SiteHeader() {
     const [activeSection, setActiveSection] = useState("home")
     const [showScrollTop, setShowScrollTop] = useState(false)
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+    const [isAuthModalOpen, setIsAuthModalOpen] = useState(false)
     const [mounted, setMounted] = useState(false)
     const pathname = usePathname()
     const { cartCount, openCart } = useCart()
+    const { customer, logout } = useAuth()
 
     useEffect(() => {
         setMounted(true)
@@ -82,6 +86,15 @@ export function SiteHeader() {
         window.scrollTo({ top: 0, behavior: "smooth" })
     }
 
+    const handleAuthClick = (e: React.MouseEvent) => {
+        e.preventDefault();
+        if (customer) {
+            logout();
+        } else {
+            setIsAuthModalOpen(true);
+        }
+    };
+
     // Avoid hydration mismatch by not rendering until mounted
     if (!mounted) {
         return (
@@ -129,14 +142,15 @@ export function SiteHeader() {
 
                     <div className="flex items-center gap-4">
                         <ModeToggle />
-                        <a
-                            href="https://ufybyf-s9.myshopify.com/account/login"
-                            target="_blank"
-                            rel="noopener noreferrer"
+
+                        {/* Auth Button */}
+                        <button
+                            onClick={handleAuthClick}
                             className="hidden sm:block text-sm font-medium hover:text-blue-600 dark:text-white transition-colors"
                         >
-                            Login
-                        </a>
+                            {customer ? `Hi, ${customer.firstName}` : "Login"}
+                        </button>
+
                         <button
                             onClick={openCart}
                             className="btn-primary relative text-sm"
@@ -172,12 +186,15 @@ export function SiteHeader() {
                             </a>
                         ))}
                         <div className="border-t border-zinc-100 dark:border-zinc-800 my-2 pt-2">
-                            <a
-                                href="https://ufybyf-s9.myshopify.com/account/login"
+                            <button
+                                onClick={(e) => {
+                                    handleAuthClick(e);
+                                    setIsMobileMenuOpen(false);
+                                }}
                                 className="block w-full text-left font-semibold text-base py-3 px-4 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-900 rounded-xl"
                             >
-                                Login
-                            </a>
+                                {customer ? `Logout (${customer.firstName})` : "Login"}
+                            </button>
                         </div>
                     </div>
                 )}
@@ -192,6 +209,12 @@ export function SiteHeader() {
             >
                 <ArrowUp className="w-5 h-5" />
             </button>
+
+            {/* Auth Modal */}
+            <AuthModal
+                isOpen={isAuthModalOpen}
+                onClose={() => setIsAuthModalOpen(false)}
+            />
         </>
     )
 }

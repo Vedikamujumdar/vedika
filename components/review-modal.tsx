@@ -1,7 +1,8 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
+import { useAuth } from "@/context/auth-context"
 
 interface ReviewModalProps {
     isOpen: boolean;
@@ -10,14 +11,26 @@ interface ReviewModalProps {
 }
 
 export function ReviewModal({ isOpen, onClose, onSuccess }: ReviewModalProps) {
+    const { customer } = useAuth()
     const [rating, setRating] = useState(5)
     const [hoverRating, setHoverRating] = useState(0)
     const [name, setName] = useState("")
-    const [role, setRole] = useState("Verified Buyer")
+    const [role, setRole] = useState("Customer")
     const [text, setText] = useState("")
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [submitted, setSubmitted] = useState(false)
     const [error, setError] = useState<string | null>(null)
+
+    // Pre-fill data if logged in
+    useEffect(() => {
+        if (customer) {
+            setName(customer.firstName + " " + (customer.lastName ? customer.lastName.charAt(0) + "." : ""))
+
+            // simple check: if they have ANY orders, they are verified
+            const hasOrders = customer.orders?.edges?.length > 0
+            setRole(hasOrders ? "Verified Buyer" : "Customer")
+        }
+    }, [customer])
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -51,7 +64,8 @@ export function ReviewModal({ isOpen, onClose, onSuccess }: ReviewModalProps) {
                 // Reset form after closing
                 setTimeout(() => {
                     setSubmitted(false)
-                    setName("")
+                    // Don't reset name if logged in
+                    if (!customer) setName("")
                     setText("")
                     setRating(5)
                 }, 500)

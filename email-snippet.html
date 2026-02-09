@@ -1,0 +1,39 @@
+<!-- 
+  SHOPIFY ORDER CONFIRMATION EMAIL SNIPPET
+  Paste this into your Notification template (Settings > Notifications > Order confirmation)
+  Place it after the order details or near the footer.
+-->
+
+<table class="row section">
+  <tr>
+    <td class="section__cell">
+      <center>
+        <table class="container">
+          <tr>
+            <td>
+              
+              <table class="row">
+                <tr>
+                  <td class="customer-info__item">
+                    <div style="text-align: center; padding: 40px 0; border-top: 1px solid #e5e5e5;">
+                      <h3 style="font-size: 20px; font-weight: 400; letter-spacing: -0.5px; margin-bottom: 16px; color: #333;">
+                        One quick question, {{ customer.first_name }}...
+                      </h3>
+                      <p style="font-size: 16px; line-height: 1.6; color: #555; margin-bottom: 24px; max-width: 400px; margin-left: auto; margin-right: auto;">
+                        Hope you're enjoying your Clean Crate order. If you have a moment, we'd love to hear how it fits into your day.
+                      </p>
+                      <a href="REPLACE_WITH_YOUR_GOOGLE_FORM_LINK" target="_blank" style="display: inline-block; background-color: #333; color: #fff; text-decoration: none; padding: 12px 30px; border-radius: 50px; font-weight: 600; font-size: 14px;">
+                        Share Your Experience
+                      </a>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+
+            </td>
+          </tr>
+        </table>
+      </center>
+    </td>
+  </tr>
+</table>

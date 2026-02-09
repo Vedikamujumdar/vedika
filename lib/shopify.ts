@@ -1,7 +1,7 @@
 const domain = "ufybyf-s9.myshopify.com";
 const storefrontToken = "073200920991e76a0eefaff1261be35b";
 
-async function ShopifyData(query: string) {
+async function ShopifyData(query: string, variables: any = {}) {
   const URL = `https://${domain}/api/2024-01/graphql.json`;
 
   const options = {
@@ -11,7 +11,7 @@ async function ShopifyData(query: string) {
       "X-Shopify-Storefront-Access-Token": storefrontToken,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ query }),
+    body: JSON.stringify({ query, variables }),
   };
 
   try {
@@ -286,4 +286,115 @@ export function createCheckoutUrl(items: { variantId: string; quantity: number }
   }).join(',');
 
   return `https://${domain}/cart/${param}`;
+}
+
+// ============================================
+// CUSTOMER AUTHENTICATION
+// ============================================
+
+export async function loginCustomer(email, password) {
+  const query = `
+    mutation customerAccessTokenCreate($input: CustomerAccessTokenCreateInput!) {
+      customerAccessTokenCreate(input: $input) {
+        customerAccessToken {
+          accessToken
+          expiresAt
+        }
+        customerUserErrors {
+          code
+          field
+          message
+        }
+      }
+    }
+  `;
+
+  const variables = {
+    input: {
+      email,
+      password,
+    },
+  };
+
+  const response = await ShopifyData(query, variables);
+
+  if (response.data?.customerAccessTokenCreate?.customerUserErrors?.length > 0) {
+    throw new Error(response.data.customerAccessTokenCreate.customerUserErrors[0].message);
+  }
+
+  const token = response.data?.customerAccessTokenCreate?.customerAccessToken;
+  return token;
+}
+
+export async function getCustomer(accessToken) {
+  const query = `
+    query getCustomer($customerAccessToken: String!) {
+      customer(customerAccessToken: $customerAccessToken) {
+        id
+        firstName
+        lastName
+        email
+        orders(first: 10) {
+          edges {
+            node {
+              id
+              orderNumber
+              fulfillmentStatus
+              lineItems(first: 20) {
+                edges {
+                  node {
+                    title
+                    variant {
+                      id
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  const variables = {
+    customerAccessToken: accessToken,
+  };
+
+  const response = await ShopifyData(query, variables);
+  return response.data?.customer;
+}
+
+export async function createCustomer(email, password, firstName, lastName) {
+  const query = `
+    mutation customerCreate($input: CustomerCreateInput!) {
+      customerCreate(input: $input) {
+        customer {
+          id
+        }
+        customerUserErrors {
+          code
+          field
+          message
+        }
+      }
+    }
+  `;
+
+  const input = {
+    email,
+    password,
+    firstName,
+    lastName,
+  };
+
+  const variables = { input };
+
+  const response = await ShopifyData(query, variables);
+
+  if (response.data?.customerCreate?.customerUserErrors?.length > 0) {
+    throw new Error(response.data.customerCreate.customerUserErrors[0].message);
+  }
+
+  return response.data?.customerCreate?.customer;
 }

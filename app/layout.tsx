@@ -20,6 +20,7 @@ export const metadata: Metadata = {
 import { ThemeProvider } from "@/components/theme-provider";
 import { SiteHeader } from "@/components/site-header";
 import { CartProvider } from "@/context/cart-context";
+import { AuthProvider } from "@/context/auth-context";
 import { CartDrawer } from "@/components/cart-drawer";
 
 export default function RootLayout({
@@ -39,11 +40,13 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <CartProvider>
-            <SiteHeader />
-            <CartDrawer />
-            <div className="flex flex-col min-h-screen">
-              {children}
-            </div>
+            <AuthProvider>
+              <SiteHeader />
+              <CartDrawer />
+              <div className="flex flex-col min-h-screen">
+                {children}
+              </div>
+            </AuthProvider>
           </CartProvider>
         </ThemeProvider>
       </body>

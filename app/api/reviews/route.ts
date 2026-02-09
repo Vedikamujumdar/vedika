@@ -1,15 +1,19 @@
 import { NextResponse } from "next/server";
 
-const domain = "ufybyf-s9.myshopify.com";
-const apiSecret = process.env.SHOPIFY_API_SECRET || "";
+// Google Form Configuration
+const GOOGLE_FORM_ACTION_URL = "https://docs.google.com/forms/d/e/1FAIpQLSejBS1pA4ddRU_2DMPv1LsJmbzCF9md-CidHUaHOF87ERAK0w/formResponse";
 
-/**
- * POST handler for submitting reviews to Shopify Metaobjects
- */
+const FIELD_MAPPING = {
+    name: "entry.1283266528",
+    role: "entry.122595403",
+    rating: "entry.1197868331",
+    review: "entry.287233578"
+};
+
 export async function POST(req: Request) {
     try {
         const body = await req.json();
-        const { author, role, rating, text, date } = body;
+        const { author, role, rating, text } = body;
 
         if (!author || !rating || !text) {
             return NextResponse.json(
@@ -18,90 +22,34 @@ export async function POST(req: Request) {
             );
         }
 
-        // Shopify Admin API GraphQL Mutation to create a Metaobject
-        // This requires the 'testimonial' metaobject definition to exist in Shopify Admin
-        const query = `
-        mutation CreateMetaobject($metaobject: MetaobjectCreateInput!) {
-          metaobjectCreate(metaobject: $metaobject) {
-            metaobject {
-              id
-              handle
-            }
-            userErrors {
-              field
-              message
-              code
-            }
-          }
-        }
-        `;
+        // Construct Form Data for Google Forms
+        const formData = new URLSearchParams();
+        formData.append(FIELD_MAPPING.name, author);
+        formData.append(FIELD_MAPPING.role, role || "Verified Buyer");
+        formData.append(FIELD_MAPPING.rating, rating.toString());
+        formData.append(FIELD_MAPPING.review, text);
 
-        const variables = {
-            metaobject: {
-                type: "testimonial",
-                fields: [
-                    { key: "author", value: author },
-                    { key: "role", value: role || "Verified Buyer" },
-                    { key: "rating", value: rating.toString() },
-                    { key: "text", value: text },
-                    { key: "date", value: date || "Recently" }
-                ]
-            }
-        };
-
-        const URL = `https://${domain}/admin/api/2024-01/graphql.json`;
-        const apiKey = process.env.SHOPIFY_API_KEY || "";
-
-        const options = {
+        // Submit to Google Forms
+        const response = await fetch(GOOGLE_FORM_ACTION_URL, {
             method: "POST",
+            mode: "no-cors", // Google Forms doesn't support CORS for direct browser fetch, but server-side is fine
             headers: {
-                "X-Shopify-Access-Token": apiSecret,
-                "Content-Type": "application/json",
+                "Content-Type": "application/x-www-form-urlencoded",
             },
-            body: JSON.stringify({ query, variables }),
-        };
-
-        let response = await fetch(URL, options);
-
-        // Fallback to Basic Auth if direct token fails (common for private apps)
-        if (response.status === 401) {
-            console.warn("Direct token failed in reviews API, trying Basic Auth...");
-            const basicAuth = Buffer.from(`${apiKey}:${apiSecret}`).toString('base64');
-            const basicOptions = {
-                ...options,
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Basic ${basicAuth}`
-                }
-            };
-            response = await fetch(URL, basicOptions);
-        }
-
-        const result = await response.json();
-
-        if (result.errors) {
-            console.error("Shopify API Errors:", result.errors);
-            return NextResponse.json(
-                { error: "Shopify API Error", details: result.errors },
-                { status: 500 }
-            );
-        }
-
-        const { metaobject, userErrors } = result.data.metaobjectCreate;
-
-        if (userErrors && userErrors.length > 0) {
-            console.error("Metaobject Creation Errors:", userErrors);
-            return NextResponse.json(
-                { error: userErrors[0].message },
-                { status: 500 }
-            );
-        }
-
-        return NextResponse.json({
-            success: true,
-            id: metaobject.id,
-            handle: metaobject.handle
+            body: formData.toString(),
         });
+
+        // Google Forms returns an opaque response in no-cors mode, or HTML. 
+        // Since we are proxying, we just assume success if no network error thrown.
+        // Actually, on server side 'no-cors' isn't a thing like in browser, 
+        // but Google returns 200 OK with HTML content on success.
+
+        if (response.ok) {
+            return NextResponse.json({ success: true });
+        } else {
+            console.error("Google Form Submission Failed:", response.status, response.statusText);
+            return NextResponse.json({ error: "Failed to submit to Google Form" }, { status: 500 });
+        }
 
     } catch (error: any) {
         console.error("Review API Route Error:", error);
