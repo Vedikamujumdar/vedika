@@ -292,7 +292,7 @@ export function createCheckoutUrl(items: { variantId: string; quantity: number }
 // CUSTOMER AUTHENTICATION
 // ============================================
 
-export async function loginCustomer(email, password) {
+export async function loginCustomer(email: string, password: string) {
   const query = `
     mutation customerAccessTokenCreate($input: CustomerAccessTokenCreateInput!) {
       customerAccessTokenCreate(input: $input) {
@@ -326,7 +326,7 @@ export async function loginCustomer(email, password) {
   return token;
 }
 
-export async function getCustomer(accessToken) {
+export async function getCustomer(accessToken: string) {
   const query = `
     query getCustomer($customerAccessToken: String!) {
       customer(customerAccessToken: $customerAccessToken) {
@@ -365,7 +365,7 @@ export async function getCustomer(accessToken) {
   return response.data?.customer;
 }
 
-export async function createCustomer(email, password, firstName, lastName) {
+export async function createCustomer(email: string, password: string, firstName: string, lastName: string) {
   const query = `
     mutation customerCreate($input: CustomerCreateInput!) {
       customerCreate(input: $input) {
