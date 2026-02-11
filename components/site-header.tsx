@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { usePathname } from "next/navigation"
+import { useTheme } from "next-themes"
 import { ModeToggle } from "@/components/mode-toggle"
 import { ArrowUp, Menu, X } from "lucide-react"
 import { useCart } from "@/context/cart-context"
@@ -21,7 +22,9 @@ const NAV_LINKS = [
 ]
 
 export function SiteHeader() {
+    const { resolvedTheme } = useTheme()
     const [activeSection, setActiveSection] = useState("home")
+    // ...
     const [showScrollTop, setShowScrollTop] = useState(false)
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
     const [isAuthModalOpen, setIsAuthModalOpen] = useState(false)
@@ -112,7 +115,7 @@ export function SiteHeader() {
                 <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6 lg:px-8">
                     <Link href="/" onClick={scrollToTop} className="flex items-center gap-2 group">
                         <Image
-                            src="/logo-new.jpg"
+                            src={mounted && resolvedTheme === "dark" ? "/logo-dark.jpg" : "/logo-new.jpg"}
                             alt="Clean Crate"
                             width={180}
                             height={60}
