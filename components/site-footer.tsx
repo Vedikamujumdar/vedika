@@ -37,8 +37,6 @@ export function SiteFooter() {
                         <ul className="space-y-4 text-sm text-zinc-500 dark:text-zinc-400">
                             <li><NavLink href="/#products">All Products</NavLink></li>
                             <li><NavLink href="/#products">Best Sellers</NavLink></li>
-                            <li><NavLink href="/#products">Bundles</NavLink></li>
-                            <li><NavLink href="/#products">Trial Packs</NavLink></li>
                         </ul>
                     </div>
 
