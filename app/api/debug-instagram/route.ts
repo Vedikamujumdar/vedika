@@ -1,7 +1,15 @@
 import { NextResponse } from "next/server";
 
+// Valid token starting with IGAA...
+const HARDCODED_VALID_TOKEN = "IGAANONTVltZAxBZAFk4TWYtOFlWc3ZAZATEljZAFVKNEduR0pRdEFsZAVc0VWI1T1ZAKMUFpT2RlT1piOXVjUzBSSXYwMXp6V2NISGVNU3liOXUtcURTb2libXctaHlxWW9CZA0R2bGFGclJWR0lwbGtuc3VNanV1dkxmZAjhNQTRQTlZApUQZDZD";
+
 export async function GET() {
-    const token = process.env.INSTAGRAM_ACCESS_TOKEN;
+    let token = process.env.INSTAGRAM_ACCESS_TOKEN;
+
+    // Fallback logic
+    if (!token || token.startsWith("EAA")) {
+        token = HARDCODED_VALID_TOKEN;
+    }
 
     if (!token) {
         return NextResponse.json({

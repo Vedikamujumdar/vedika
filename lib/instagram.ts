@@ -60,8 +60,17 @@ const MOCK_REELS: InstagramReel[] = [
     }
 ];
 
+// Valid token starting with IGAA...
+const HARDCODED_VALID_TOKEN = "IGAANONTVltZAxBZAFk4TWYtOFlWc3ZAZATEljZAFVKNEduR0pRdEFsZAVc0VWI1T1ZAKMUFpT2RlT1piOXVjUzBSSXYwMXp6V2NISGVNU3liOXUtcURTb2libXctaHlxWW9CZA0R2bGFGclJWR0lwbGtuc3VNanV1dkxmZAjhNQTRQTlZApUQZDZD";
+
 export async function getLatestReels(): Promise<InstagramReel[]> {
-    const token = process.env.INSTAGRAM_ACCESS_TOKEN;
+    let token = process.env.INSTAGRAM_ACCESS_TOKEN;
+
+    // Fix for Vercel env var issue: If token is missing OR starts with 'EAA' (Facebook format, wrong), use hardcoded valid token
+    if (!token || token.startsWith("EAA")) {
+        console.warn("[Instagram] Env var invalid or missing, using hardcoded fallback token.");
+        token = HARDCODED_VALID_TOKEN;
+    }
 
     if (!token) {
         console.warn("INSTAGRAM_ACCESS_TOKEN not found, using static mock data.");
