@@ -9,11 +9,13 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@cashfreepayments/cashfree-js": "^1.0.6",
     "@giscus/react": "^3.1.0",
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.5.0",
     "@shopify/buy-button-js": "^3.0.6",
     "@types/three": "^0.182.0",
+    "cashfree-pg-sdk-nodejs": "^2.0.2",
     "clsx": "^2.1.1",
     "disqus-react": "^1.1.7",
     "dotenv": "^17.2.3",

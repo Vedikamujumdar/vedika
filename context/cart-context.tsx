@@ -22,7 +22,9 @@ type CartContextType = {
     addItem: (item: CartItem) => void
     removeItem: (variantId: string) => void
     updateQuantity: (variantId: string, delta: number) => void
+    clearCart: () => void
     handleCheckout: () => Promise<void>
+    mounted: boolean
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined)
@@ -87,35 +89,15 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     }
 
     const handleCheckout = async () => {
-        if (items.length === 0 || isCheckingOut) return;
+        if (items.length === 0) return;
+        closeCart();
+        // Redirect to custom checkout page where we integrate Cashfree
+        window.location.href = "/checkout";
+    };
 
-        setIsCheckingOut(true);
-        try {
-            const response = await fetch("/api/checkout", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    items: items.map(i => ({
-                        variantId: i.variantId,
-                        quantity: i.quantity
-                    }))
-                }),
-            });
-
-            const data = await response.json();
-            if (data.checkoutUrl) {
-                window.location.href = data.checkoutUrl;
-            } else {
-                throw new Error(data.error || "Failed to get checkout URL");
-            }
-        } catch (error) {
-            console.error("Checkout error:", error);
-            alert("Ready to Checkout? We were unable to redirect you directly to the secure checkout page. Please try again or contact support if the issue persists.");
-        } finally {
-            setIsCheckingOut(false);
-        }
+    const clearCart = () => {
+        setItems([]);
+        localStorage.removeItem("local_cart_items");
     };
 
     // Computed Properties
@@ -130,9 +112,11 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
             addItem,
             removeItem,
             updateQuantity,
+            clearCart,
             cartCount,
             handleCheckout,
-            isCheckingOut
+            isCheckingOut,
+            mounted
         }}>
             {children}
         </CartContext.Provider>

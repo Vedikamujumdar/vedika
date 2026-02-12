@@ -398,3 +398,161 @@ export async function createCustomer(email: string, password: string, firstName:
 
   return response.data?.customerCreate?.customer;
 }
+
+// ============================================
+// ADMIN API - ORDER CREATION
+// ============================================
+
+export async function createShopifyOrder(orderData: any) {
+  const adminToken = process.env.SHOPIFY_ADMIN_ACCESS_TOKEN;
+  const domain = process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN || "ufybyf-s9.myshopify.com";
+
+  if (!adminToken || adminToken.includes("your_token_here")) {
+    console.error("Missing SHOPIFY_ADMIN_ACCESS_TOKEN");
+    return null; // Cannot create order without token
+  }
+
+  const URL = `https://${domain}/admin/api/2024-01/orders.json`;
+
+  // Map to REST API structure
+  const line_items = orderData.lineItems.map((item: any) => {
+    // Extract numeric ID from GID if present
+    const variant_id = item.variantId.toString().includes("/")
+      ? item.variantId.split("/").pop()
+      : item.variantId;
+    return {
+      variant_id: Number(variant_id),
+      quantity: item.quantity
+    };
+  });
+
+  const payload = {
+    order: {
+      line_items,
+      customer: {
+        first_name: orderData.customer.firstName,
+        last_name: orderData.customer.lastName,
+        email: orderData.customer.email,
+        phone: orderData.customer.phone
+      },
+      shipping_address: {
+        address1: orderData.customer.address,
+        city: orderData.customer.city,
+        province: orderData.customer.state,
+        zip: orderData.customer.zip,
+        country: "India", // Assuming India
+        first_name: orderData.customer.firstName,
+        last_name: orderData.customer.lastName,
+        phone: orderData.customer.phone
+      },
+      billing_address: {
+        address1: orderData.customer.address,
+        city: orderData.customer.city,
+        province: orderData.customer.state,
+        zip: orderData.customer.zip,
+        country: "India",
+        first_name: orderData.customer.firstName,
+        last_name: orderData.customer.lastName,
+        phone: orderData.customer.phone
+      },
+      financial_status: orderData.financialStatus.toLowerCase() || "paid",
+      tags: "Cashfree, Online Payment",
+      note: `Payment ID: ${orderData.paymentId}`
+    }
+  };
+
+  try {
+    const response = await fetch(URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Shopify-Access-Token": adminToken,
+      },
+      body: JSON.stringify(payload),
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      console.error("Shopify Order Create Error (REST):", JSON.stringify(result));
+      throw new Error(JSON.stringify(result.errors) || "Failed to create order");
+    }
+
+    // Return the order object in the expected format (mapped to GraphQL-like structure if needed, or just return as is)
+    // The existing code expects .id which works (but invalid format? REST returns numeric ID, GraphQL returns GID)
+    // We should convert ID to GID to be consistent with other parts if they expect GID.
+    // However, existing usage: app/api/payment/create-order/route.ts
+    // const shopifyOrderId = shopifyOrder.id.split("/").pop(); 
+    // If we return numeric ID, .split("/").pop() still works nicely (returns the ID itself).
+
+    // But route.ts also returns `shopifyOrderId: shopifyOrder.id` to client.
+    // If client expects GID, we should probably construct it.
+    // But let's check: route.ts 
+    // shopifyOrderId: shopifyOrder.id // Return full GID for client
+
+    const order = result.order;
+    // Normalize ID to GID for consistency
+    const gid = `gid://shopify/Order/${order.id}`;
+
+    return {
+      ...order,
+      id: gid,
+      name: order.name
+    };
+
+  } catch (error) {
+    console.error("Error creating Shopify order (REST):", error);
+    throw error;
+  }
+}
+
+
+export async function markShopifyOrderAsPaid(shopifyOrderId: string) {
+  const adminToken = process.env.SHOPIFY_ADMIN_ACCESS_TOKEN;
+  const domain = process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN || "ufybyf-s9.myshopify.com";
+
+  if (!adminToken) return;
+
+  const URL = `https://${domain}/admin/api/2024-01/graphql.json`;
+
+  const query = `
+      mutation orderMarkAsPaid($input: OrderMarkAsPaidInput!) {
+        orderMarkAsPaid(input: $input) {
+          order {
+            id
+            displayFinancialStatus
+          }
+          userErrors {
+            field
+            message
+          }
+        }
+      }
+    `;
+
+  const variables = {
+    input: {
+      id: shopifyOrderId
+    }
+  };
+
+  try {
+    const response = await fetch(URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Shopify-Access-Token": adminToken,
+      },
+      body: JSON.stringify({ query, variables }),
+    });
+
+    const result = await response.json();
+    if (result.data?.orderMarkAsPaid?.userErrors?.length > 0) {
+      console.error("Error marking order as paid:", result.data.orderMarkAsPaid.userErrors);
+    }
+    return result.data?.orderMarkAsPaid?.order;
+  } catch (error) {
+    console.error("Failed to mark order as paid:", error);
+    throw error;
+  }
+}
