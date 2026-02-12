@@ -45,6 +45,7 @@ export async function GET() {
                 hasMediaUrl: !!p.media_url,
                 hasThumbnail: !!p.thumbnail_url,
             })),
+            lastUpdated: new Date().toISOString(),
         });
     } catch (error: any) {
         return NextResponse.json({
