@@ -409,7 +409,7 @@ export async function createShopifyOrder(orderData: any) {
 
   if (!adminToken || adminToken.includes("your_token_here")) {
     console.error("Missing SHOPIFY_ADMIN_ACCESS_TOKEN");
-    return null; // Cannot create order without token
+    throw new Error("Configuration Error: SHOPIFY_ADMIN_ACCESS_TOKEN is missing on server");
   }
 
   const URL = `https://${domain}/admin/api/2024-01/orders.json`;
