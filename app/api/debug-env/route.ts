@@ -8,7 +8,8 @@ export async function GET() {
         "CASHFREE_APP_ID",
         "CASHFREE_SECRET_KEY",
         "CASHFREE_ENV",
-        "INSTAGRAM_ACCESS_TOKEN"
+        "INSTAGRAM_ACCESS_TOKEN",
+        "TEST_VAR"
     ];
 
     const status = vars.reduce((acc, key) => {
