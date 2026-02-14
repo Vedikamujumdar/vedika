@@ -10,7 +10,10 @@ export async function GET() {
             message: "Missing credentials in request environment",
             details: {
                 hasToken: !!adminToken,
-                hasDomain: !!domain
+                hasDomain: !!domain,
+                tokenLength: adminToken?.length || 0,
+                tokenPrefix: adminToken ? adminToken.substring(0, 10) + "..." : "N/A",
+                domain: domain || "N/A"
             }
         });
     }
@@ -42,6 +45,7 @@ export async function GET() {
             shop: data.shop.name,
             domain: data.shop.domain,
             email: data.shop.email,
+            tokenPrefix: adminToken.substring(0, 10) + "...",
             message: "Credentials are VALID."
         });
 
