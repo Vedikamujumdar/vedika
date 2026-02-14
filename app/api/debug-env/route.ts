@@ -9,7 +9,11 @@ export async function GET() {
         "CASHFREE_SECRET_KEY",
         "CASHFREE_ENV",
         "INSTAGRAM_ACCESS_TOKEN",
-        "TEST_VAR"
+        "TEST_VAR",
+        "VERCEL",
+        "VERCEL_ENV",
+        "CI",
+        "NODE_ENV"
     ];
 
     const status = vars.reduce((acc, key) => {
