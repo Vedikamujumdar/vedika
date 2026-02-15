@@ -25,14 +25,14 @@ export async function CuratedProductsGrid() {
                         const price = product.priceRange?.minVariantPrice;
 
                         return (
-                            <div key={product.id} className="group relative w-full aspect-[4/5] md:aspect-square overflow-hidden bg-zinc-100 dark:bg-zinc-800 rounded-2xl">
+                            <div key={product.id} className="group relative w-full aspect-[3/4] overflow-hidden bg-zinc-100 dark:bg-zinc-800 rounded-2xl">
                                 <Link href={`/products/${product.handle}`} className="block w-full h-full">
                                     {image ? (
                                         <Image
                                             src={image.url}
                                             alt={image.altText || product.title}
                                             fill
-                                            className="object-contain transition-transform duration-700 ease-in-out group-hover:scale-105 p-4"
+                                            className="object-cover object-center transition-transform duration-700 ease-in-out group-hover:scale-105"
                                         />
                                     ) : (
                                         <div className="w-full h-full flex items-center justify-center text-zinc-400">
