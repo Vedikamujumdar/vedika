@@ -108,6 +108,18 @@ async function submitToShopify(author: string, role: string, rating: number, tex
     const userErrors = result.data?.metaobjectCreate?.userErrors;
     if (userErrors && userErrors.length > 0) {
         console.error("Shopify Metaobject UserErrors:", userErrors);
+        // If metaobject definition doesn't exist, this is a Shopify config issue
+        // Return a friendly message instead of the raw API error
+        const isDefinitionError = userErrors.some((e: any) =>
+            e.message?.toLowerCase().includes("metaobject definition") ||
+            e.message?.toLowerCase().includes("no metaobject")
+        );
+        if (isDefinitionError) {
+            return NextResponse.json(
+                { error: "Reviews are temporarily unavailable. Please try again later." },
+                { status: 503 }
+            );
+        }
         return NextResponse.json(
             { error: userErrors.map((e: any) => e.message).join(", ") },
             { status: 422 }
