@@ -31,13 +31,23 @@ export async function POST(req: Request) {
             );
         }
 
-        // ── Primary: Shopify Metaobject ──
+        // ── Primary: Try Shopify Metaobject ──
         if (ADMIN_TOKEN) {
-            return await submitToShopify(author, role || "Customer", rating, text);
+            try {
+                const shopifyResult = await submitToShopify(author, role || "Customer", rating, text);
+                // Check if Shopify returned an error status
+                const responseData = await shopifyResult.clone().json();
+                if (responseData.success) {
+                    return shopifyResult;
+                }
+                // Shopify failed, fall through to Google Forms
+                console.warn("Shopify metaobject failed, falling back to Google Forms:", responseData.error);
+            } catch (shopifyError: any) {
+                console.warn("Shopify submission error, falling back to Google Forms:", shopifyError.message);
+            }
         }
 
-        // ── Fallback: Google Forms ──
-        console.warn("SHOPIFY_ADMIN_ACCESS_TOKEN not set – falling back to Google Forms");
+        // ── Fallback: Google Forms (always works) ──
         return await submitToGoogleForms(author, role || "Customer", rating, text);
 
     } catch (error: any) {
