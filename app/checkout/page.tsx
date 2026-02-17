@@ -235,11 +235,25 @@ export default function CheckoutPage() {
                                             <p className="font-semibold text-sm text-zinc-900 dark:text-white flex items-center justify-between">
                                                 Cashfree Payments
                                                 {/* Payment Icons Row */}
-                                                <div className="flex -space-x-1">
-                                                    <img src="https://cdn.shopify.com/s/files/1/0663/6666/9051/files/upi-icon.png?v=1694757640" alt="UPI" className="h-4 w-auto object-contain bg-white rounded-sm border border-zinc-200" />
-                                                    <img src="https://cdn.shopify.com/s/files/1/0663/6666/9051/files/visa.png?v=1694757640" alt="Visa" className="h-4 w-auto object-contain bg-white rounded-sm border border-zinc-200" />
-                                                    <img src="https://cdn.shopify.com/s/files/1/0663/6666/9051/files/mastercard.png?v=1694757640" alt="Mastercard" className="h-4 w-auto object-contain bg-white rounded-sm border border-zinc-200" />
-                                                    <div className="h-4 w-6 bg-zinc-100 border border-zinc-200 rounded-sm flex items-center justify-center text-[8px] font-bold text-zinc-500">+4</div>
+                                                <div className="flex items-center gap-1.5">
+                                                    {/* UPI */}
+                                                    <span className="h-5 px-1.5 bg-white rounded border border-zinc-200 flex items-center justify-center text-[9px] font-bold text-green-700 tracking-tight">UPI</span>
+                                                    {/* Visa */}
+                                                    <span className="h-5 px-1.5 bg-white rounded border border-zinc-200 flex items-center justify-center">
+                                                        <svg viewBox="0 0 48 16" className="h-3 w-auto" fill="none">
+                                                            <path d="M19.2 1.6L12.8 14.4H8.8L5.6 4.4C5.4 3.6 5.2 3.4 4.6 3C3.6 2.4 2 1.8 0.6 1.6L0.8 1.2H7.6C8.6 1.2 9.4 1.8 9.6 3L11.2 11.2L15 1.6H19.2ZM34 10.8L36 1.6H40L38 14.4H34L34 10.8ZM32 1.6L28.4 14.4H24.4L28 1.6H32ZM46.4 10.4L47.2 6.8L44 1.6H48L46.4 10.4Z" fill="#1A1F71" />
+                                                        </svg>
+                                                    </span>
+                                                    {/* Mastercard */}
+                                                    <span className="h-5 px-1 bg-white rounded border border-zinc-200 flex items-center justify-center">
+                                                        <svg viewBox="0 0 24 16" className="h-3.5 w-auto" fill="none">
+                                                            <circle cx="9" cy="8" r="7" fill="#EB001B" opacity="0.9" />
+                                                            <circle cx="15" cy="8" r="7" fill="#F79E1B" opacity="0.9" />
+                                                            <path d="M12 2.8a7 7 0 0 1 0 10.4 7 7 0 0 1 0-10.4z" fill="#FF5F00" />
+                                                        </svg>
+                                                    </span>
+                                                    {/* +more */}
+                                                    <span className="h-5 w-6 bg-zinc-100 border border-zinc-200 rounded flex items-center justify-center text-[8px] font-bold text-zinc-500">+4</span>
                                                 </div>
                                             </p>
                                             <p className="text-xs text-zinc-500 mt-1">UPI, Cards, Wallets, NetBanking</p>
