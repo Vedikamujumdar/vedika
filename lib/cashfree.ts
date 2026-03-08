@@ -13,11 +13,16 @@ if (!CASHFREE_APP_ID || !CASHFREE_SECRET_KEY) {
 const cashfree = new CFPaymentGateway();
 
 export const getCashfreeConfig = () => {
+    // Load config from process.env when called, not at module load time
+    const appId = process.env.CASHFREE_APP_ID || "";
+    const secretKey = process.env.CASHFREE_SECRET_KEY || "";
+    const env = process.env.CASHFREE_ENV || "TEST";
+
     return new CFConfig(
-        CASHFREE_ENV === "PROD" ? CFEnvironment.PRODUCTION : CFEnvironment.SANDBOX,
+        env === "PROD" ? CFEnvironment.PRODUCTION : CFEnvironment.SANDBOX,
         "2022-09-01",
-        CASHFREE_APP_ID || "",
-        CASHFREE_SECRET_KEY || ""
+        appId,
+        secretKey
     );
 };
 

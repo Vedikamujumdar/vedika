@@ -1,8 +1,23 @@
+import { Metadata } from "next";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { blogPosts } from "@/lib/data/blogs";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+
+export const metadata: Metadata = {
+    title: "Blog — Healthy Living, Oats Recipes & Nutrition Tips",
+    description: "Read the latest articles on healthy oats, protein nutrition, clean eating recipes, and wellness tips from The Clean Crate Foods. Expert advice for a healthier lifestyle.",
+    keywords: ["healthy oats blog", "oats recipes India", "nutrition tips", "protein oats articles", "clean eating blog"],
+    alternates: {
+        canonical: "https://www.thecleancratefoods.com/blogs",
+    },
+    openGraph: {
+        title: "Blog | The Clean Crate Foods",
+        description: "Expert advice, delicious recipes, and stories about healthy living.",
+        url: "https://www.thecleancratefoods.com/blogs",
+    },
+};
 
 export default function BlogListingPage() {
     return (

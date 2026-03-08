@@ -1,3 +1,12 @@
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Cookie Policy",
+    description: "Learn how The Clean Crate Foods uses cookies and similar technologies on our website, including essential, performance, and functional cookies.",
+    alternates: {
+        canonical: "https://www.thecleancratefoods.com/cookie-policy",
+    },
+};
 
 export default function CookiePolicyPage() {
     return (

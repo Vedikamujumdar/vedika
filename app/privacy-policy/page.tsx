@@ -1,3 +1,12 @@
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Privacy Policy",
+    description: "Learn how The Clean Crate Foods collects, uses, and protects your personal information when you visit our website or purchase our products.",
+    alternates: {
+        canonical: "https://www.thecleancratefoods.com/privacy-policy",
+    },
+};
 
 export default function PrivacyPolicyPage() {
     return (

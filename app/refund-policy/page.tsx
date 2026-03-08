@@ -1,3 +1,12 @@
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Refund & Cancellation Policy",
+    description: "Read The Clean Crate Foods refund, return, and cancellation policy. We offer replacements for damaged, wrong, or expired products within 48 hours of delivery.",
+    alternates: {
+        canonical: "https://www.thecleancratefoods.com/refund-policy",
+    },
+};
 
 export default function RefundPolicyPage() {
     return (

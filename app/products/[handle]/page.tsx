@@ -79,13 +79,43 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
             priceCurrency: currency,
             price: price,
             availability: product.availableForSale ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
-            itemCondition: "https://schema.org/NewCondition"
-        }
+            itemCondition: "https://schema.org/NewCondition",
+            seller: {
+                "@type": "Organization",
+                name: "The Clean Crate Foods",
+            },
+        },
+    };
+
+    const breadcrumbJsonLd = {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+            {
+                "@type": "ListItem",
+                position: 1,
+                name: "Home",
+                item: "https://www.thecleancratefoods.com",
+            },
+            {
+                "@type": "ListItem",
+                position: 2,
+                name: "Products",
+                item: "https://www.thecleancratefoods.com/products",
+            },
+            {
+                "@type": "ListItem",
+                position: 3,
+                name: product.title,
+                item: `https://www.thecleancratefoods.com/products/${handle}`,
+            },
+        ],
     };
 
     return (
         <div className="min-h-screen bg-white text-zinc-900 selection:bg-black selection:text-white dark:bg-black dark:text-white dark:selection:bg-white dark:selection:text-black">
             <JsonLd data={jsonLd} />
+            <JsonLd data={breadcrumbJsonLd} />
             <ProductViewTracker
                 productTitle={product.title}
                 productId={product.variants.edges[0]?.node.id || handle}

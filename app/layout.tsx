@@ -40,6 +40,12 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "The Clean Crate Foods" }],
   creator: "The Clean Crate Foods",
+  alternates: {
+    canonical: "https://www.thecleancratefoods.com",
+  },
+  verification: {
+    google: "0f4e9cf4e8605eba",
+  },
   openGraph: {
     type: "website",
     locale: "en_IN",

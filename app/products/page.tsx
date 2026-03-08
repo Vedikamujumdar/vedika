@@ -4,8 +4,17 @@ import { getProducts } from "@/lib/shopify"
 import { Metadata } from "next"
 
 export const metadata: Metadata = {
-    title: "All Products | The Clean Crate",
-    description: "Browse our collection of healthy, clean, and delicious food products.",
+    title: "All Products — Ready to Eat Protein Oats & Protein Bites",
+    description: "Browse The Clean Crate's collection of ready-to-eat protein oats and protein bites. High protein, no added sugar, 100% natural ingredients. Free shipping across India. Order online.",
+    keywords: ["buy protein oats India", "ready to eat oats", "protein bites online", "The Clean Crate products", "healthy snacks India", "no sugar oats"],
+    alternates: {
+        canonical: "https://www.thecleancratefoods.com/products",
+    },
+    openGraph: {
+        title: "Shop All Products | The Clean Crate Foods",
+        description: "High protein, no added sugar, 100% natural. Free shipping across India.",
+        url: "https://www.thecleancratefoods.com/products",
+    },
 }
 
 export default async function ProductsPage() {

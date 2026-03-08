@@ -1,3 +1,12 @@
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Terms of Service",
+    description: "Review The Clean Crate Foods terms of service, including product pricing, billing, health disclaimers, and governing law for purchases on thecleancratefoods.com.",
+    alternates: {
+        canonical: "https://www.thecleancratefoods.com/terms-of-service",
+    },
+};
 
 export default function TermsOfServicePage() {
     return (

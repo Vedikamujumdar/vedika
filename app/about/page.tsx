@@ -1,6 +1,22 @@
+import { Metadata } from "next";
 import { SiteFooter } from "@/components/site-footer";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import Image from "next/image";
+
+export const metadata: Metadata = {
+    title: "About Us | The Clean Crate Foods — Our Story",
+    description: "The Clean Crate is a women-founded healthy snacking brand from Hyderabad. We create ready-to-eat protein oats and protein bites with clean, natural ingredients — no fillers, no junk.",
+    keywords: ["about The Clean Crate", "healthy snack brand India", "women founded food brand", "clean eating India", "protein oats brand"],
+    alternates: {
+        canonical: "https://www.thecleancratefoods.com/about",
+    },
+    openGraph: {
+        title: "About Us | The Clean Crate Foods",
+        description: "Women-founded. Clean ingredients. Honest nutrition. Learn our story.",
+        url: "https://www.thecleancratefoods.com/about",
+        images: ["/our-story-founders.png"],
+    },
+};
 
 export default function AboutPage() {
     return (
