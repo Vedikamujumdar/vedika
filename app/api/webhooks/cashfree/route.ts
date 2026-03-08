@@ -2,6 +2,7 @@
 import { NextResponse } from "next/server";
 import cashfree, { getCashfreeConfig } from "@/lib/cashfree";
 import { markShopifyOrderAsPaid } from "@/lib/shopify";
+import { sendCAPIPurchaseEvent } from "@/lib/meta-capi";
 
 // IMPORTANT: Cashfree Webhook Verification
 // Documentation: https://docs.cashfree.com/docs/webhooks-integration
@@ -63,6 +64,15 @@ export async function POST(req: Request) {
 
                         console.log(`Webhook: Marking Shopify Order ${shopifyOrderId} as PAID`);
                         await markShopifyOrderAsPaid(gid);
+
+                        // Fire Meta CAPI Purchase event (server-to-server)
+                        const orderAmount = Number(orderDetails.cfOrder.orderAmount) || 0;
+                        sendCAPIPurchaseEvent({
+                            orderId: orderId,
+                            amount: orderAmount,
+                            currency: "INR",
+                        }).catch((err) => console.error("Meta CAPI Purchase event failed:", err));
+
                         return NextResponse.json({ status: "processed", shopify_order_id: shopifyOrderId });
                     } else {
                         console.error("Webhook: Shopify Order ID not found");

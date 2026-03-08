@@ -5,6 +5,7 @@ import { useCart } from "@/context/cart-context";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { load } from "@cashfreepayments/cashfree-js";
+import { fbqTrack } from "@/components/meta-pixel";
 
 export default function CheckoutPage() {
     const { items, cartCount } = useCart();
@@ -43,6 +44,23 @@ export default function CheckoutPage() {
 
         return () => clearTimeout(timeout);
     }, [items, router]);
+
+    // Fire Meta Pixel InitiateCheckout event
+    useEffect(() => {
+        if (items.length > 0) {
+            fbqTrack("InitiateCheckout", {
+                content_ids: items.map(i => i.variantId),
+                contents: items.map(i => ({
+                    id: i.variantId,
+                    quantity: i.quantity,
+                })),
+                num_items: items.reduce((acc, i) => acc + i.quantity, 0),
+                value: subtotal,
+                currency: "INR",
+            });
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });

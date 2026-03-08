@@ -75,6 +75,7 @@ import { SiteHeader } from "@/components/site-header";
 import { CartProvider } from "@/context/cart-context";
 import { AuthProvider } from "@/context/auth-context";
 import { CartDrawer } from "@/components/cart-drawer";
+import { MetaPixel } from "@/components/meta-pixel";
 
 export default function RootLayout({
   children,
@@ -86,6 +87,7 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${outfit.variable} antialiased`}
       >
+        <MetaPixel />
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

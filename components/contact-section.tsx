@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { fbqTrack } from "@/components/meta-pixel"
 
 export function ContactSection() {
     const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
@@ -21,6 +22,11 @@ export function ContactSection() {
 
             setStatus("success");
             setFormData({ name: "", email: "", message: "" });
+
+            // Fire Meta Pixel Contact event
+            fbqTrack("Contact", {
+                content_name: "Contact Form Submission",
+            });
 
             // Reset status after 3 seconds
             setTimeout(() => setStatus("idle"), 5000);

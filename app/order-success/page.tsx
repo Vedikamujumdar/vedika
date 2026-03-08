@@ -5,17 +5,32 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { CheckCircle2 } from "lucide-react";
 import { useCart } from "@/context/cart-context";
+import { fbqTrack } from "@/components/meta-pixel";
 
 function OrderSuccessContent() {
     const searchParams = useSearchParams();
     const orderId = searchParams.get("id");
+    const amount = searchParams.get("amount");
     const { items } = useCart();
 
     useEffect(() => {
         if (orderId) {
+            // Fire Meta Pixel Purchase event
+            fbqTrack("Purchase", {
+                content_ids: items.map(i => i.variantId),
+                contents: items.map(i => ({
+                    id: i.variantId,
+                    quantity: i.quantity,
+                })),
+                content_type: "product",
+                value: amount ? Number(amount) : items.reduce((acc, i) => acc + Number(i.price) * i.quantity, 0),
+                currency: "INR",
+                num_items: items.reduce((acc, i) => acc + i.quantity, 0),
+            });
+
             localStorage.removeItem("local_cart_items");
         }
-    }, [orderId]);
+    }, [orderId, amount, items]);
 
     return (
         <div className="w-full max-w-md bg-white dark:bg-zinc-900 p-8 rounded-2xl shadow-sm border border-zinc-100 dark:border-zinc-800 text-center space-y-6">

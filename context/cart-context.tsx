@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState } from "react"
 import { createCheckoutUrl } from "@/lib/shopify"
+import { fbqTrack } from "@/components/meta-pixel"
 
 export type CartItem = {
     variantId: string
@@ -70,6 +71,15 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
             return [...current, newItem]
         })
         setIsOpen(true)
+
+        // Fire Meta Pixel AddToCart event
+        fbqTrack("AddToCart", {
+            content_name: newItem.productTitle,
+            content_ids: [newItem.variantId],
+            content_type: "product",
+            value: Number(newItem.price) * newItem.quantity,
+            currency: "INR",
+        })
     }
 
     const removeItem = (variantId: string) => {

@@ -6,6 +6,7 @@ import { ProductReviewsWidget } from "@/components/product-reviews-widget";
 import { SiteFooter } from "@/components/site-footer";
 import Link from "next/link";
 import { getProduct } from "@/lib/shopify";
+import { ProductViewTracker } from "@/components/product-view-tracker";
 import { notFound } from "next/navigation";
 
 import { Metadata } from "next";
@@ -85,6 +86,12 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
     return (
         <div className="min-h-screen bg-white text-zinc-900 selection:bg-black selection:text-white dark:bg-black dark:text-white dark:selection:bg-white dark:selection:text-black">
             <JsonLd data={jsonLd} />
+            <ProductViewTracker
+                productTitle={product.title}
+                productId={product.variants.edges[0]?.node.id || handle}
+                value={Number(price)}
+                currency={currency}
+            />
 
             <main className="pt-24 pb-24">
                 <div className="mx-auto max-w-7xl px-6 lg:px-8">

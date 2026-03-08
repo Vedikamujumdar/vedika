@@ -42,7 +42,8 @@ export async function GET(req: Request) {
 
             // 4. Redirect to Success Page
             // We can pass shopify order ID to show details
-            return NextResponse.redirect(new URL(`/order-success?id=${shopifyOrderId}`, req.url));
+            const orderAmount = orderDetails.cfOrder.orderAmount || "";
+            return NextResponse.redirect(new URL(`/order-success?id=${shopifyOrderId}&amount=${orderAmount}`, req.url));
         } else {
             // Payment Pending or Failed
             return NextResponse.redirect(new URL("/checkout?error=Payment+Failed+or+Pending", req.url));
