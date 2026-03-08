@@ -44,7 +44,8 @@ export async function POST(req: Request) {
                 if (orderDetails.cfOrder && orderDetails.cfOrder.orderStatus === "PAID") {
                     // 5. Update Shopify Order
                     // We stored shopify_order_id in tags during creation
-                    const orderTags = orderDetails.cfOrder.orderTags as any;
+                    const orderData = orderDetails.cfOrder as any;
+                    const orderTags = orderData.orderTags;
                     let shopifyOrderId = orderTags?.shopify_order_id;
 
                     if (!shopifyOrderId) {
